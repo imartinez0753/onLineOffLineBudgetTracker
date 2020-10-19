@@ -7,16 +7,17 @@ const FILES_TO_CACHE = [
   "/styles.css",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
-  "/models/transaction.js",
-  "/routes/api.js"
+  
   
 ];
 
 // install
 self.addEventListener("install", function (evt) {
+  console.log('install')
   // pre cache image data
   evt.waitUntil(
     caches.open(DATA_CACHE_NAME).then((cache) => cache.add("/api/transaction"))
+    
   );
     
   // pre cache all static assets
@@ -28,6 +29,13 @@ self.addEventListener("install", function (evt) {
   // has finished installing
   self.skipWaiting();
 });
+
+self.addEventListener("sync", function(event) {
+  console.log(event);
+  if (event.tag == "syncTest") {
+    
+  }
+})
 
 // activate
 self.addEventListener("activate", function(evt) {
@@ -58,7 +66,6 @@ self.addEventListener("fetch", function(evt) {
             if (response.status === 200) {
               cache.put(evt.request.url, response.clone());
             }
-
             return response;
           })
           .catch(err => {
